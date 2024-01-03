@@ -14,12 +14,12 @@ The user can choose which calculation they want to do by entering:
 import math
 
 def app():
-    '''asks user to provide an input for the programme & validates before passing to calculator'''
+    """asks user to provide an input for the programme & validates before passing to calculator'''
     print('''Which calculator would you like to use?
         - Bond calculator - used to calculate home loan repayments 
         - Investment calculator - used to calculate interest on an investment
     \ntype 'bond' or 'investment' to select, or 'cancel' to exit.    
-    ''')
+    """
     request = check_request(input("input: "))
     if request == "bond":
         calculate_bond()
@@ -28,15 +28,15 @@ def app():
 
 # bond calculator
 def calculate_bond():
-    '''Calculates the amount a user will have to pay on a home loan'''
+    """Calculates the amount a user will have to pay on a home loan"""
     print(f"\n{"-"*10}Bond calculator{"-"*10}\n")
-    print('''In order to calculate how much you'll need to repay each month you'll need to provide:
+    print("""In order to calculate how much you'll need to repay each month you'll need to provide:
         1) The current value of the house
         2) The interest rate (as a percentage)
         3) The number of months you want the loan to be over 
           
 Please enter:
-    ''')
+    """)
     amount = get_input("money", "The house value")
     rate = get_input("percentage", "The interest rate (as a percentage)") /1200
     months = get_input("integer", "The number of months to repay over")
@@ -46,16 +46,16 @@ Please enter:
 
 # investment calculator
 def calculate_investment():
-    '''Calculates the amount a user will earn on an investment'''
+    """Calculates the amount a user will earn on an investment"""
     print(f"\n{"-"*10}Investment calculator{"-"*10}\n")
-    print('''In order to calculate the amount of interest you'll need to provide:
+    print("""In order to calculate the amount of interest you'll need to provide:
         1) The investment amount 
         2) The interest rate (as a percentage)
         3) The number of years the amount is being invested for
         4) If the interest is 'simple' or 'compound'    
           
 Please enter:
-    ''')
+    """)
     amount = get_input("money", "The investment amount")
     rate = get_input("percentage", "The interest rate (as a percentage)")
     years = get_input("integer", "How many years you are investing for")
@@ -72,7 +72,7 @@ Please enter:
 # check_request, get_input and check_ValueError all check and sanitise inputs.
 # If an input if invalid, user will be asked to enter it again
 def check_request(request):
-    '''validates user request and before calling the required calculator'''
+    """validates user request and before calling the required calculator"""
     valid_requests = ["bond", "investment", "cancel"]
     lower_request = request.lower()
     if lower_request not in valid_requests:
@@ -83,7 +83,7 @@ def check_request(request):
     else: return lower_request
 
 def get_input(input_type, prompt):
-    '''Validates, formats and returns an input depending on the provided 'input_type' variable'''
+    """Validates, formats and returns an input depending on the provided 'input_type' variable"""
     value = input(f"{prompt}: ")
     if input_type == "money":
         #check the user input doesn't have more than 2 decimal places
@@ -99,7 +99,7 @@ def get_input(input_type, prompt):
     return value
 
 def check_ValueError(input_type, prompt, value):
-    '''Makes sure the user input matches the required format. Otherwise ask again'''
+    """Makes sure the user input matches the required format. Otherwise ask again"""
     try:
         if input_type == "money" or input_type == "percentage":
             value = float(value.replace("%","").replace(",",""))
