@@ -1,11 +1,15 @@
-# ===============================finance_calculators.py===============================
-#
-# A python programme that allows the user access to 2 different financial calculators:
-#   1) An investment calculator
-#   2) A home loan repayment calculator
-# The user can choose which calculation they want to do by entering:
-#   "bond" > for the amount they have to pay on a home loan
-#   "investment" > for the amount of interest they'll earn on an investment
+"""An app with finance calculators to calculate interest on an investment or loan.
+
+A self-contained python programme that provides a user with 2 calculators:
+    1) An investment calculator
+    2) A home loan repayment calculator
+The user interacts the the programme on the command line, and then gets the 
+result printed in that same command line instance.
+
+The user can choose which calculation they want to do by entering:
+    "bond" > for the amount they have to pay on a home loan.
+    "investment" > for the amount of interest they'll earn on an investment.
+"""
 
 import math
 
