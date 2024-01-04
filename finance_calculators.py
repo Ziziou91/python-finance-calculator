@@ -7,29 +7,29 @@ The user interacts the the programme on the command line, and then gets the
 result printed in that same command line instance.
 
 The user can choose which calculation they want to do by entering:
-    "bond" > for the amount they have to pay on a home loan.
+    "mortgage" > for the amount they have to pay on a home loan.
     "investment" > for the amount of interest they'll earn on an investment.
 """
 
 import math
 
 def app():
-    """asks user to provide an input for the programme & validates before passing to calculator'''
-    print('''Which calculator would you like to use?
-        - Bond calculator - used to calculate home loan repayments 
+    """asks user to provide an input for the programme & validates before passing to calculator"""
+    print("""Which calculator would you like to use?
+        - Mortgage calculator - used to calculate home loan repayments 
         - Investment calculator - used to calculate interest on an investment
-    \ntype 'bond' or 'investment' to select, or 'cancel' to exit.    
+    \ntype 'mortgage' or 'investment' to select, or 'cancel' to exit.    
     """
     request = check_request(input("input: "))
-    if request == "bond":
-        calculate_bond()
+    if request == "mortgage":
+        calculate_mortgage()
     elif request == "investment":
         calculate_investment()
 
-# bond calculator
-def calculate_bond():
+# mortgage calculator
+def calculate_mortgage():
     """Calculates the amount a user will have to pay on a home loan"""
-    print(f"\n{"-"*10}Bond calculator{"-"*10}\n")
+    print(f"\n{"-"*10}Mortgage calculator{"-"*10}\n")
     print("""In order to calculate how much you'll need to repay each month you'll need to provide:
         1) The current value of the house
         2) The interest rate (as a percentage)
@@ -73,7 +73,7 @@ Please enter:
 # If an input if invalid, user will be asked to enter it again
 def check_request(request):
     """validates user request and before calling the required calculator"""
-    valid_requests = ["bond", "investment", "cancel"]
+    valid_requests = ["mortgage", "investment", "cancel"]
     lower_request = request.lower()
     if lower_request not in valid_requests:
         print(f"\n{"-"*10}ERROR! '{lower_request}' is not not a valid request! Please try again.{"-"*10}\n")
