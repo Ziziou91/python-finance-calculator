@@ -14,7 +14,6 @@ The user can choose which calculation they want to do by entering:
 import math
 import re
 
-
 def app():
     """asks user to provide an input for the programme & validates before passing to calculator"""
     print("""Which calculator would you like to use?
@@ -22,8 +21,17 @@ def app():
         - Investment calculator - used to calculate interest on an investment
     \ntype 'mortgage' or 'investment' to select, or 'cancel' to exit.    
     """)
-    request = check_request(input("input: "))
-    if request == "mortgage":
+    valid_inputs = ["mortgage", "investment", "cancel"]
+    request = input("input: ").lower()
+    try:
+        if request not in valid_inputs:
+            raise ValueError(f"\n{"="*10}ERROR! '{request}' is not not a valid input! Please try again.{"="*10}\n")
+    except ValueError as e:
+        print(e)
+        app()   
+    if request == "cancel":
+        exit()
+    elif request == "mortgage":
         calculate_mortgage()
     elif request == "investment":
         calculate_investment()
@@ -45,7 +53,6 @@ Please enter:
     monthly_repayment = round((rate * amount) / (1 - (1 + rate) ** (-months)),2)
     print(f"\nYou will have to repay £{monthly_repayment} each month, and £{monthly_repayment * months} in total.")
 
-
 # investment calculator
 def calculate_investment():
     """Calculates the amount a user will earn on an investment"""
@@ -58,11 +65,11 @@ def calculate_investment():
           
 Please enter:
     """)
-    amount = get_input("money", "The investment amount")
-    rate = get_input("percentage", "The interest rate (as a percentage)")
-    years = get_input("integer", "How many years you are investing for")
-    interest = get_input("string", "'Simple' or 'Compound' interest")
-    total = None
+    amount = get_input("amount", "The investment amount")
+    rate = get_input("rate", "The interest rate (as a percentage)")
+    years = get_input("years", "How many years you are investing for")
+    interest = get_input("string", "'Simple' or 'Compound' interest").lower()
+    total = 0
     if interest == "simple":
         print("\nsimple interest")
         total = round(amount * (1 + rate * years), 2)
@@ -71,50 +78,40 @@ Please enter:
         total = round(amount * math.pow((1 + rate/100), years), 2)
     print(f"\nAfter {years} years, you will have £{total}")
 
-def sanitise_num(value):
+def sanitise_num(value, input_type):
     """Sanitise number strings by removing currency, commas and percentage symbols"""
-    value = re.sub("[^\d\.]", "", value)
+    value = float(re.sub(r"[^\d\.]", "", value))
+    if input_type == "money":
+        value = round(value, 2)
     return value
 
-# check_request, get_input and check_ValueError all check and sanitise inputs.
-# If an input if invalid, user will be asked to enter it again
-def check_request(request):
-    """validates user request and before calling the required calculator"""
-    valid_requests = ["mortgage", "investment", "cancel"]
-    lower_request = request.lower()
-    if lower_request not in valid_requests:
-        print(f"\n{"-"*10}ERROR! '{lower_request}' is not not a valid request! Please try again.{"-"*10}\n")
-        app()
-    elif request == "cancel":
-        exit()
-    else: return lower_request
-
 def get_input(input_type, prompt):
-    """prompts a user for input, passes to validate_input and returns an input depending on the provided 'input_type' variable"""
+    """prompts a user for input, passes to validate_input. Returns input depending on input_type."""
     value = input(f"{prompt}: ")
-    return validate_Input(input_type, prompt, value)
+    return validate_input(input_type, prompt, value)
 
-def validate_Input(input_type, prompt, value):
+def validate_input(input_type, prompt, value):
     """takes the input_type and value, checks its valid and formats.
     
     If the input isn't value it prompts the user to re-enter.
     """
-    num_string_types = ["money", "percentage", "integer"]
+    num_string_types = ["amount", "rate", "years"]
+    interest_types = ["simple", "compound"]
     if input_type in num_string_types:
         try:
-            float(sanitise_num(value))
-        except ValueError as err:
-            print(err)
-            get_input(input_type, prompt) 
+            sanitise_num(value, input_type)
+        except ValueError:
+            print(f"\n{"="*10} ERROR! '{value}' is not not a valid input Please try again.{"="*10}\n")
+            value = get_input(input_type, prompt)
         else:
-            value = float(sanitise_num(value)) 
-    elif input_type == 'string':
-        valid_inputs = ["simple", "compund"]
-        if value not in valid_inputs:
-            print(f"\nERROR! '{value}' is not not a valid request! Please try again.\n")
-            get_input(input_type, prompt)
-    print(value)
-    print("type", type(value))
+            value = sanitise_num(value, input_type)
+    else: 
+        try:
+            if value.lower() not in interest_types:
+                raise ValueError(f"\n{"="*10}ERROR! '{value}' is not not a valid input! Please try again.{"="*10}\n")
+        except ValueError as e:
+            print(e)
+            value = get_input(input_type, prompt)
     return value
 
 print(f"{"="*10}finance_calculators.py{"="*10}\n")
