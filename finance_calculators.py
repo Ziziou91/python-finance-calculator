@@ -12,6 +12,8 @@ The user can choose which calculation they want to do by entering:
 """
 
 import math
+import re
+
 
 def app():
     """asks user to provide an input for the programme & validates before passing to calculator"""
@@ -19,7 +21,7 @@ def app():
         - Mortgage calculator - used to calculate home loan repayments 
         - Investment calculator - used to calculate interest on an investment
     \ntype 'mortgage' or 'investment' to select, or 'cancel' to exit.    
-    """
+    """)
     request = check_request(input("input: "))
     if request == "mortgage":
         calculate_mortgage()
@@ -69,6 +71,11 @@ Please enter:
         total = round(amount * math.pow((1 + rate/100), years), 2)
     print(f"\nAfter {years} years, you will have £{total}")
 
+def sanitise_num(value):
+    """Sanitise number strings by removing currency, commas and percentage symbols"""
+    value = re.sub("[^\d\.]", "", value)
+    return value
+
 # check_request, get_input and check_ValueError all check and sanitise inputs.
 # If an input if invalid, user will be asked to enter it again
 def check_request(request):
@@ -83,31 +90,31 @@ def check_request(request):
     else: return lower_request
 
 def get_input(input_type, prompt):
-    """Validates, formats and returns an input depending on the provided 'input_type' variable"""
+    """prompts a user for input, passes to validate_input and returns an input depending on the provided 'input_type' variable"""
     value = input(f"{prompt}: ")
-    if input_type == "money":
-        #check the user input doesn't have more than 2 decimal places
-        if "." in value:
-            if len(value.split(".")[1]) > 2:
-                print(f"\n{"-"*10}ERROR! '{value}' should not have more than 2 decimal places. Try again.{"-"*10}\n")
-                get_input(input_type, prompt)
+    return validate_Input(input_type, prompt, value)
+
+def validate_Input(input_type, prompt, value):
+    """takes the input_type and value, checks its valid and formats.
+    
+    If the input isn't value it prompts the user to re-enter.
+    """
+    num_string_types = ["money", "percentage", "integer"]
+    if input_type in num_string_types:
+        try:
+            float(sanitise_num(value))
+        except ValueError as err:
+            print(err)
+            get_input(input_type, prompt) 
+        else:
+            value = float(sanitise_num(value)) 
     elif input_type == 'string':
-        if value != "simple" and value != "compound":
+        valid_inputs = ["simple", "compund"]
+        if value not in valid_inputs:
             print(f"\nERROR! '{value}' is not not a valid request! Please try again.\n")
             get_input(input_type, prompt)
-    value = check_ValueError(input_type, prompt, value)
-    return value
-
-def check_ValueError(input_type, prompt, value):
-    """Makes sure the user input matches the required format. Otherwise ask again"""
-    try:
-        if input_type == "money" or input_type == "percentage":
-            value = float(value.replace("%","").replace(",",""))
-        elif input_type == "integer":
-            value = int(value)
-    except ValueError:
-        print(f"\nERROR! '{value}' is not not a valid request! Please try again.\n")
-        get_input(input_type, prompt)
+    print(value)
+    print("type", type(value))
     return value
 
 print(f"{"="*10}finance_calculators.py{"="*10}\n")
