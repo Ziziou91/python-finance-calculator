@@ -14,7 +14,7 @@ The user can choose which calculation they want to do by entering:
 import math
 import re
 
-def app():
+def app() -> None:
     """asks user to provide an input for the programme & validates before passing to calculator"""
     print("""Which calculator would you like to use?
         - Mortgage calculator - used to calculate home loan repayments 
@@ -37,7 +37,7 @@ def app():
         calculate_investment()
 
 # mortgage calculator
-def calculate_mortgage():
+def calculate_mortgage() -> None:
     """Calculates the amount a user will have to pay on a home loan"""
     print(f"\n{"-"*10}Mortgage calculator{"-"*10}\n")
     print("""In order to calculate how much you'll need to repay each month you'll need to provide:
@@ -54,7 +54,7 @@ Please enter:
     print(f"\nYou will have to repay £{monthly_repayment} each month, and £{monthly_repayment * months} in total.")
 
 # investment calculator
-def calculate_investment():
+def calculate_investment() -> None:
     """Calculates the amount a user will earn on an investment"""
     print(f"\n{"-"*10}Investment calculator{"-"*10}\n")
     print("""In order to calculate the amount of interest you'll need to provide:
@@ -78,19 +78,19 @@ Please enter:
         total = round(amount * math.pow((1 + rate/100), years), 2)
     print(f"\nAfter {years} years, you will have £{total}")
 
-def sanitise_num(value, input_type):
+def sanitise_num(value: str, input_type: str) -> float:
     """Sanitise number strings by removing currency, commas and percentage symbols"""
     value = float(re.sub(r"[^\d\.]", "", value))
     if input_type == "money":
         value = round(value, 2)
     return value
 
-def get_input(input_type, prompt):
+def get_input(input_type: str, prompt: str) -> float | str:
     """prompts a user for input, passes to validate_input. Returns input depending on input_type."""
     value = input(f"{prompt}: ")
     return validate_input(input_type, prompt, value)
 
-def validate_input(input_type, prompt, value):
+def validate_input(input_type: str, prompt: str, value: str) -> float | str:
     """takes the input_type and value, checks its valid and formats.
     
     If the input isn't value it prompts the user to re-enter.
@@ -105,7 +105,7 @@ def validate_input(input_type, prompt, value):
             value = get_input(input_type, prompt)
         else:
             value = sanitise_num(value, input_type)
-    else: 
+    else:
         try:
             if value.lower() not in interest_types:
                 raise ValueError(f"\n{"="*10}ERROR! '{value}' is not not a valid input! Please try again.{"="*10}\n")
